@@ -18,9 +18,10 @@ do ($ = jQuery) ->
   # ============================================================
   # Dialog
   
-  class ns.Dialog extends EveEve
+  class ns.Dialog
 
     constructor: ->
+      console.log 'lychee!'
 
   # ============================================================
   # jQuery bridges
