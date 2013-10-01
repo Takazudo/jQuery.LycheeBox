@@ -107,6 +107,9 @@
         if (!this.opened) {
           return;
         }
+        if (!this.imgReady) {
+          return;
+        }
         o = this.options;
         imgSize = $.imgUtil.calcRectContainImgWH({
           imgWidth: this.naturalImgSize.width,
@@ -137,14 +140,16 @@
           return _this._removeSpinner();
         }).then(function() {
           _this._prepareElsInsideDialog();
-          _this.resizeEls();
           _this.$holder.append(_this.$img);
+          _this.imgReady = true;
+          _this.resizeEls();
           return _this.$main.fadeIn();
         });
       };
 
       Dialog.prototype._handleBeforeClose = function() {
         this.opened = false;
+        this.imgReady = false;
         return this._uneventify_overlayClickClose();
       };
 

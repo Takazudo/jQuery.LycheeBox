@@ -106,6 +106,7 @@ do ($ = jQuery) ->
     resizeEls: ->
       
       return unless @opened
+      return unless @imgReady
       o = @options
 
       imgSize = $.imgUtil.calcRectContainImgWH
@@ -126,7 +127,6 @@ do ($ = jQuery) ->
       @$main.css mainSize
       @$holder.css imgSize
 
-
     _handleAfterOpen: ->
 
       @opened = true
@@ -137,13 +137,15 @@ do ($ = jQuery) ->
         return @_removeSpinner()
       .then =>
         @_prepareElsInsideDialog()
-        @resizeEls()
         @$holder.append @$img
+        @imgReady = true
+        @resizeEls()
         @$main.fadeIn()
 
     _handleBeforeClose: ->
 
       @opened = false
+      @imgReady = false
       @_uneventify_overlayClickClose()
 
     _eventify_overlayClickClose: ->
