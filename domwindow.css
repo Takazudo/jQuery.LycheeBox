@@ -1,43 +1,96 @@
 html,body{
-	margin:0;
-	padding:0;
+  margin:0;
+  padding:0;
 }
+
+/* domwindow */
+
 .ui-hideoverlay{
-	position:fixed;
-	text-align:left;
-	left:0;
-	top:0;
-	width:100%;
-	height:100%;
-	z-index:9999;
-	display:none;
+  position:fixed;
+  text-align:left;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  z-index:9999;
+  display:none;
 }
-	.ui-hideoverlay-bg{
-		position:absolute;
-		left:0;
-		top:0;
-		width:100%;
-		height:100%;
-		z-index:9999;
-		background:#000;
-	}
-	.ui-hideoverlay-spinner{
-		position:absolute;
-		left:50%;
-		top:50%;
-		width:200px;
-		height:200px;
-		margin:-100px 0 0 -100px;
-		background:url(spinner.gif) no-repeat 50% 50%;
-		z-index:10000;
-	}
+  .ui-hideoverlay-bg{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    z-index:9999;
+    background:#000;
+  }
+  .ui-hideoverlay-spinner{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:200px;
+    height:200px;
+    margin:-100px 0 0 -100px;
+    z-index:10000;
+  }
 
 .ui-domwindowdialog{
-	text-align:left;
-	position:fixed;
-	_position:absolute;
-	left:0;
-	top:0;
-	z-index:10001;
-	display:none;
+  text-align:left;
+  position:fixed;
+  _position:absolute;
+  left:0;
+  top:0;
+  z-index:10001;
+  display:none;
 }
+
+/* lycheeBox */
+
+.lycheebox-dialog {
+  width:100%;
+  height:100%;
+  position:relative;
+}
+  .lycheebox-positioner {
+    position:absolute;
+    left:50%;
+    top:50%;
+  }
+    .lycheebox-main {
+      background:#fff;
+      border-radius:4px;
+      display:none;
+      position:relative;
+    }
+      .lycheebox-main-inner {
+        padding:10px;
+        text-align:right;
+      }
+        .lycheebox-imgholder {
+          margin:0 auto;
+        }
+          .lycheebox-imgholder img {
+            display:block;
+            width:100%;
+            height:100%;
+          }
+        .lycheebox-dialogcloser {
+          background:#333;
+          color:#fff;
+          height:25px;
+          font-size:13px;
+          line-height:25px;
+          width:100px;
+          text-align:center;
+          display:block;
+          margin:10px 0 0 auto;
+          border-radius:2px;
+        }
+  .lycheebox-loader {
+    text-align:left;
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+  }
