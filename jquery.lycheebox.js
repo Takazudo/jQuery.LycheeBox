@@ -1,15 +1,22 @@
 /*! jQuery.LycheeBox (https://github.com/Takazudo/jQuery.LycheeBox)
- * lastupdate: 2013-10-01
+ * lastupdate: 2013-10-03
  * version: 0.0.0
  * author: 'Takazudo' Takeshi Takatsudo <takazudo@gmail.com>
  * License: MIT */
 (function() {
   (function($) {
-    var $document, $window, domwindowApi, ns;
+    var $document, $window, domwindowApi, ns, wait;
     $window = $(window);
     $document = $(document);
     domwindowApi = null;
     ns = {};
+    wait = function(time) {
+      return $.Deferred(function(defer) {
+        return setTimeout(function() {
+          return defer.resolve();
+        }, time);
+      }).promise();
+    };
     ns.setup = (function() {
       var setupDone;
       setupDone = false;
@@ -41,6 +48,34 @@
         return o;
       }
     };
+    ns.fadeIn = function($el, duration) {
+      var from, to;
+      if (duration == null) {
+        duration = 400;
+      }
+      from = {
+        display: 'block',
+        opacity: 0
+      };
+      to = {
+        opacity: 1
+      };
+      return $el.css(from).animate(to, duration);
+    };
+    ns.fadeOut = function($el, duration) {
+      var from, to;
+      if (duration == null) {
+        duration = 400;
+      }
+      from = {
+        display: 'block',
+        opacity: 1
+      };
+      to = {
+        opacity: 0
+      };
+      return $el.css(from).animate(to, duration);
+    };
     ns.Dialog = (function() {
       Dialog.defaults = {
         dialog_src: "<div class=\"lycheebox-dialog\">\n  <div class=\"lycheebox-positioner\">\n    <div class=\"lycheebox-main\">\n      <div class=\"lycheebox-main-inner\">\n        <div class=\"lycheebox-imgholder\"></div>\n        <a class=\"lycheebox-dialogcloser apply-domwindow-close\" href=\"#\">close</a>\n      </div>\n    </div>\n  </div>\n  <div class=\"lycheebox-loader\"></div>\n</div>",
@@ -59,7 +94,8 @@
         dialog_TB_margin: 10,
         dialog_LR_padding: 10,
         dialog_TB_padding: 10,
-        dialog_closer_height: 35
+        dialog_closer_height: 35,
+        dialog_click_close: true
       };
 
       function Dialog($opener, options) {
@@ -81,8 +117,11 @@
             return _this._handleAfterOpen();
           },
           beforeclose: function() {
-            _this.$dialog = null;
             return _this._handleBeforeClose();
+          },
+          afterclose: function() {
+            _this.$dialog.empty();
+            return _this.$dialog = null;
           }
         }, ns.viewport.createSizeObject());
         return domwindowApi.open(this.options.dialog_src, openOptions);
@@ -143,7 +182,7 @@
           _this.$holder.append(_this.$img);
           _this.imgReady = true;
           _this.resizeEls();
-          return _this.$main.fadeIn();
+          return ns.fadeIn(_this.$main);
         });
       };
 
@@ -156,6 +195,9 @@
       Dialog.prototype._eventify_overlayClickClose = function() {
         var o,
           _this = this;
+        if (!this.options.dialog_click_close) {
+          return;
+        }
         o = this.options;
         this._overlayClickHandler = function(e) {
           var $target;
@@ -165,20 +207,26 @@
           }
           return domwindowApi.close();
         };
-        return $document.delegate(o.selector_dialogRoot, 'click', this._overlayClickHandler);
+        return this.$dialog.bind('click', this._overlayClickHandler);
       };
 
       Dialog.prototype._uneventify_overlayClickClose = function() {
-        var o;
-        o = this.options;
-        return $document.undelegate(o.selector_dialogRoot, 'click', this._overlayClickHandler);
+        if (!this.options.dialog_click_close) {
+          return;
+        }
+        return this.$dialog.unbind('click', this._overlayClickHandler);
       };
 
       Dialog.prototype._putSpinner = function() {
         var o;
         o = this.options;
         this.$loader = $(o.selector_loader, this.$dialog);
-        return (new Spinner(o.spinner_options)).spin(this.$loader[0]);
+        this.$loader.stop().css({
+          display: 'block',
+          opacity: 0
+        });
+        (new Spinner(o.spinner_options)).spin(this.$loader[0]);
+        return ns.fadeIn(this.$loader, 200);
       };
 
       Dialog.prototype._calcImgSize = function() {
@@ -197,7 +245,7 @@
         var defer,
           _this = this;
         defer = $.Deferred();
-        ($.when(this.$loader.fadeOut())).done(function() {
+        ($.when(ns.fadeOut(this.$loader))).done(function() {
           _this.$loader.empty().remove();
           return defer.resolve();
         });
@@ -220,7 +268,8 @@
 
       Dialog.prototype._prepareElsInsideDialog = function() {
         this.$main = $(this.options.selector_main, this.$dialog);
-        return this.$holder = $(this.options.selector_holder, this.$dialog);
+        this.$holder = $(this.options.selector_holder, this.$dialog);
+        return this.$main.css('display', 'none');
       };
 
       return Dialog;

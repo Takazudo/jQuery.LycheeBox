@@ -8,6 +8,15 @@ do ($ = jQuery) ->
 
   ns = {}
 
+  # tiny util
+
+  wait = (time) ->
+    return $.Deferred (defer) ->
+      setTimeout ->
+        defer.resolve()
+      , time
+    .promise()
+
   # ============================================================
   # initializer
 
@@ -32,6 +41,23 @@ do ($ = jQuery) ->
         width: ns.viewport.width()
         height: ns.viewport.height()
       return o
+
+  ns.fadeIn = ($el, duration = 400) ->
+    from =
+      display: 'block'
+      opacity: 0
+    to =
+      opacity: 1
+    return $el.css(from).animate(to, duration)
+    
+  ns.fadeOut = ($el, duration = 400) ->
+    from =
+      display: 'block'
+      opacity: 1
+    to =
+      opacity: 0
+    return $el.css(from).animate(to, duration)
+    
 
   # ============================================================
   # Dialog
@@ -67,7 +93,7 @@ do ($ = jQuery) ->
       dialog_LR_padding: 10
       dialog_TB_padding: 10
       dialog_closer_height: 35
-
+      dialog_click_close: true
     
     constructor: (@$opener, options) ->
 
@@ -86,8 +112,10 @@ do ($ = jQuery) ->
           @$dialog = data.dialog
           @_handleAfterOpen()
         beforeclose: =>
-          @$dialog = null
           @_handleBeforeClose()
+        afterclose: =>
+          @$dialog.empty()
+          @$dialog = null
       , ns.viewport.createSizeObject()
 
       domwindowApi.open @options.dialog_src, openOptions
@@ -140,7 +168,7 @@ do ($ = jQuery) ->
         @$holder.append @$img
         @imgReady = true
         @resizeEls()
-        @$main.fadeIn()
+        ns.fadeIn @$main
 
     _handleBeforeClose: ->
 
@@ -150,23 +178,28 @@ do ($ = jQuery) ->
 
     _eventify_overlayClickClose: ->
 
+      return unless @options.dialog_click_close
       o = @options
       @_overlayClickHandler = (e) =>
         $target = $(e.target)
         return unless $target.is "#{o.selector_loader}, #{o.selector_dialogRoot}"
         domwindowApi.close()
-      $document.delegate o.selector_dialogRoot, 'click', @_overlayClickHandler
+      @$dialog.bind 'click', @_overlayClickHandler
 
     _uneventify_overlayClickClose: ->
 
-      o = @options
-      $document.undelegate o.selector_dialogRoot, 'click', @_overlayClickHandler
+      return unless @options.dialog_click_close
+      @$dialog.unbind 'click', @_overlayClickHandler
 
     _putSpinner: ->
 
       o = @options
       @$loader = $(o.selector_loader, @$dialog)
+      @$loader.stop().css
+        display: 'block'
+        opacity: 0
       (new Spinner o.spinner_options).spin @$loader[0]
+      ns.fadeIn @$loader, 200
 
     _calcImgSize: ->
 
@@ -180,7 +213,7 @@ do ($ = jQuery) ->
     _removeSpinner: ->
 
       defer = $.Deferred()
-      ($.when @$loader.fadeOut()).done =>
+      ($.when ns.fadeOut @$loader).done =>
         @$loader.empty().remove()
         defer.resolve()
       return defer.promise()
@@ -201,6 +234,7 @@ do ($ = jQuery) ->
 
       @$main = $(@options.selector_main, @$dialog)
       @$holder = $(@options.selector_holder, @$dialog)
+      @$main.css 'display', 'none'
 
   # ============================================================
   # jQuery bridges
