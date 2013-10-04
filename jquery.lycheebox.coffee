@@ -94,6 +94,7 @@ do ($ = jQuery) ->
       dialog_TB_padding: 10
       dialog_closer_height: 35
       dialog_click_close: true
+      prevent_touchmove: true
     
     constructor: (@$opener, options) ->
 
@@ -160,6 +161,7 @@ do ($ = jQuery) ->
       @opened = true
       @imgsrc = @$opener.attr 'href'
       @_eventify_overlayClickClose()
+      @_eventify_dialogTouchmove()
       @_putSpinner()
       @_calcImgSize().then =>
         return @_removeSpinner()
@@ -175,6 +177,19 @@ do ($ = jQuery) ->
       @opened = false
       @imgReady = false
       @_uneventify_overlayClickClose()
+      @_uneventify_overlayClickClose()
+
+    _eventify_dialogTouchmove: ->
+      
+      return unless @options.prevent_touchmove
+      @_touchmoveHandler = (e) ->
+        e.preventDefault()
+      @$dialog.bind 'touchmove', @_touchmoveHandler
+
+    _uneventify_dialogTouchmove: ->
+      
+      return unless @options.prevent_touchmove
+      @$dialog.unbind 'touchmove', @_touchmoveHandler
 
     _eventify_overlayClickClose: ->
 

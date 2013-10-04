@@ -1,5 +1,5 @@
 /*! jQuery.LycheeBox (https://github.com/Takazudo/jQuery.LycheeBox)
- * lastupdate: 2013-10-03
+ * lastupdate: 2013-10-04
  * version: 0.0.0
  * author: 'Takazudo' Takeshi Takatsudo <takazudo@gmail.com>
  * License: MIT */
@@ -95,7 +95,8 @@
         dialog_LR_padding: 10,
         dialog_TB_padding: 10,
         dialog_closer_height: 35,
-        dialog_click_close: true
+        dialog_click_close: true,
+        prevent_touchmove: true
       };
 
       function Dialog($opener, options) {
@@ -174,6 +175,7 @@
         this.opened = true;
         this.imgsrc = this.$opener.attr('href');
         this._eventify_overlayClickClose();
+        this._eventify_dialogTouchmove();
         this._putSpinner();
         return this._calcImgSize().then(function() {
           return _this._removeSpinner();
@@ -189,7 +191,25 @@
       Dialog.prototype._handleBeforeClose = function() {
         this.opened = false;
         this.imgReady = false;
+        this._uneventify_overlayClickClose();
         return this._uneventify_overlayClickClose();
+      };
+
+      Dialog.prototype._eventify_dialogTouchmove = function() {
+        if (!this.options.prevent_touchmove) {
+          return;
+        }
+        this._touchmoveHandler = function(e) {
+          return e.preventDefault();
+        };
+        return this.$dialog.bind('touchmove', this._touchmoveHandler);
+      };
+
+      Dialog.prototype._uneventify_dialogTouchmove = function() {
+        if (!this.options.prevent_touchmove) {
+          return;
+        }
+        return this.$dialog.unbind('touchmove', this._touchmoveHandler);
       };
 
       Dialog.prototype._eventify_overlayClickClose = function() {
