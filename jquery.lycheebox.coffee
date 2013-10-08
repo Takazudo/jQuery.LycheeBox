@@ -22,8 +22,9 @@ do ($ = jQuery) ->
 
   ns.setup = do ->
     setupDone = false
-    return ->
-      return if setupDone
+    return (force) ->
+      unless force
+        return if setupDone
       setupDone = true
       $.ui.domwindowdialog.setup
         width: 600
@@ -95,6 +96,7 @@ do ($ = jQuery) ->
       dialog_closer_height: 35
       dialog_click_close: true
       prevent_touchmove: true
+      setup_domwindow_on_everyopen: false
     
     constructor: (@$opener, options) ->
 
@@ -103,7 +105,7 @@ do ($ = jQuery) ->
 
     open: ->
 
-      ns.setup()
+      ns.setup @options.setup_domwindow_on_everyopen
       dialog_src = $.trim @options.dialog_src
 
       openOptions = $.extend

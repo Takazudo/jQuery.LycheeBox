@@ -1,5 +1,5 @@
 /*! jQuery.LycheeBox (https://github.com/Takazudo/jQuery.LycheeBox)
- * lastupdate: 2013-10-04
+ * lastupdate: 2013-10-08
  * version: 0.0.0
  * author: 'Takazudo' Takeshi Takatsudo <takazudo@gmail.com>
  * License: MIT */
@@ -20,9 +20,11 @@
     ns.setup = (function() {
       var setupDone;
       setupDone = false;
-      return function() {
-        if (setupDone) {
-          return;
+      return function(force) {
+        if (!force) {
+          if (setupDone) {
+            return;
+          }
         }
         setupDone = true;
         $.ui.domwindowdialog.setup({
@@ -96,7 +98,8 @@
         dialog_TB_padding: 10,
         dialog_closer_height: 35,
         dialog_click_close: true,
-        prevent_touchmove: true
+        prevent_touchmove: true,
+        setup_domwindow_on_everyopen: false
       };
 
       function Dialog($opener, options) {
@@ -108,7 +111,7 @@
       Dialog.prototype.open = function() {
         var dialog_src, openOptions,
           _this = this;
-        ns.setup();
+        ns.setup(this.options.setup_domwindow_on_everyopen);
         dialog_src = $.trim(this.options.dialog_src);
         openOptions = $.extend({
           strdialog: true,
