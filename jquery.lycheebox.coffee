@@ -263,7 +263,7 @@ do ($ = jQuery) ->
       if instance?
         instance.destroy()
       instance = new ns.Dialog $opener, options
-      $opener.data 'liycheebox', instance
+      $opener.data 'lycheebox', instance
 
   # ============================================================
   # globalify

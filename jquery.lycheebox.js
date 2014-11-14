@@ -1,5 +1,5 @@
 /*! jQuery.LycheeBox (https://github.com/Takazudo/jQuery.LycheeBox)
- * lastupdate: 2013-10-08
+ * lastupdate: 2014-11-15
  * version: 0.0.0
  * author: 'Takazudo' Takeshi Takatsudo <takazudo@gmail.com>
  * License: MIT */
@@ -307,7 +307,7 @@
           instance.destroy();
         }
         instance = new ns.Dialog($opener, options);
-        return $opener.data('liycheebox', instance);
+        return $opener.data('lycheebox', instance);
       });
     };
     return $.LycheeBox = ns;
