@@ -18,14 +18,20 @@ $(function() {
   var $opener = $('#lycheeTest');
   $opener.lycheeBox();
   var instance = $opener.data('lycheebox');
+  var disabled = false;
   
-  $('#openButton').on('click', function() {
-    instance.open();
+  $('#openButton').on('click', function(e) {
+    if(!disabled) {
+      e.preventDefault();
+      instance.open();
+    }
   });
   $('#disableButton').on('click', function() {
+    disabled = true;
     instance.overrideOption({ use_click_open: false });
   });
   $('#enableButton').on('click', function() {
+    disabled = false;
     instance.overrideOption({ use_click_open: true });
   });
   
@@ -37,7 +43,7 @@ $(function() {
   <h1><a href="https://github.com/Takazudo/jQuery.LycheeBox">jQuery.LycheeBox</a></h1>
   <p>API tests</p>
   <ul>
-    <li><a href="../imgs/square_1000x1000.png" id="lycheeTest">square_1000x1000.png</a></li>
+    <li><a href="../imgs/square_1000x1000.png" id="lycheeTest" target="_blank">square_1000x1000.png</a></li>
   </ul>
   <button id="openButton">open</button>
   <button id="disableButton">disable anchor click open</button>

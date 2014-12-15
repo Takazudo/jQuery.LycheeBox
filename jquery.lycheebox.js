@@ -283,8 +283,8 @@
       Dialog.prototype._eventify = function() {
         var _this = this;
         this._openerClickHandler = function(e) {
-          e.preventDefault();
           if (_this.options.use_click_open) {
+            e.preventDefault();
             return _this.open();
           }
         };

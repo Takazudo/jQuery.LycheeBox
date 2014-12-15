@@ -242,8 +242,8 @@ do ($ = jQuery) ->
     _eventify: ->
 
       @_openerClickHandler = (e) =>
-        e.preventDefault()
         if @options.use_click_open
+          e.preventDefault()
           @open()
       @_resizeHandler = (e) =>
         @resizeDialog()
