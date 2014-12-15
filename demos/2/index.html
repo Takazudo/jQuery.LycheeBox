@@ -1,0 +1,47 @@
+<!doctype html>
+<html class="no-js" lang="ja">
+<head>
+<meta charset="utf-8">
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../../lycheebox.css">
+<link rel="stylesheet" href="styles.css">
+<script src="../../libs/jquery/1.10.2/jquery.js"></script>
+<script src="../../jQuery.imgUtil/jquery.imgutil.js"></script>
+<script src="../../jQuery.ui.domwindow/lib/spin.js"></script>
+<script src="../../jQuery.ui.domwindow/lib/jquery.ui.widget.js"></script>
+<script src="../../jQuery.ui.domwindow/jquery.ui.domwindow.js"></script>
+<script src="../../jquery.lycheebox.js"></script>
+<script>
+$(function() {
+
+  var $opener = $('#lycheeTest');
+  $opener.lycheeBox();
+  var instance = $opener.data('lycheebox');
+  
+  $('#openButton').on('click', function() {
+    instance.open();
+  });
+  $('#disableButton').on('click', function() {
+    instance.overrideOption({ use_click_open: false });
+  });
+  $('#enableButton').on('click', function() {
+    instance.overrideOption({ use_click_open: true });
+  });
+  
+});
+</script>
+</head>
+<body>
+<div class="container">
+  <h1><a href="https://github.com/Takazudo/jQuery.LycheeBox">jQuery.LycheeBox</a></h1>
+  <p>API tests</p>
+  <ul>
+    <li><a href="../imgs/square_1000x1000.png" id="lycheeTest">square_1000x1000.png</a></li>
+  </ul>
+  <button id="openButton">open</button>
+  <button id="disableButton">disable anchor click open</button>
+  <button id="enableButton">enable anchor click open</button>
+</div>
+</body>
+</html>

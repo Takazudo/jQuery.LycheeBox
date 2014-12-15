@@ -1,5 +1,5 @@
 /*! jQuery.LycheeBox (https://github.com/Takazudo/jQuery.LycheeBox)
- * lastupdate: 2014-11-15
+ * lastupdate: 2014-12-15
  * version: 0.0.0
  * author: 'Takazudo' Takeshi Takatsudo <takazudo@gmail.com>
  * License: MIT */
@@ -99,6 +99,7 @@
         dialog_closer_height: 35,
         dialog_click_close: true,
         prevent_touchmove: true,
+        use_click_open: true,
         setup_domwindow_on_everyopen: false
       };
 
@@ -171,6 +172,10 @@
         };
         this.$main.css(mainSize);
         return this.$holder.css(imgSize);
+      };
+
+      Dialog.prototype.overrideOption = function(o) {
+        return this.options = $.extend(this.options, o);
       };
 
       Dialog.prototype._handleAfterOpen = function() {
@@ -279,7 +284,9 @@
         var _this = this;
         this._openerClickHandler = function(e) {
           e.preventDefault();
-          return _this.open();
+          if (_this.options.use_click_open) {
+            return _this.open();
+          }
         };
         this._resizeHandler = function(e) {
           _this.resizeDialog();

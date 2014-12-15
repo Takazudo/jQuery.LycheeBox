@@ -96,6 +96,7 @@ do ($ = jQuery) ->
       dialog_closer_height: 35
       dialog_click_close: true
       prevent_touchmove: true
+      use_click_open: true
       setup_domwindow_on_everyopen: false
     
     constructor: (@$opener, options) ->
@@ -157,6 +158,9 @@ do ($ = jQuery) ->
 
       @$main.css mainSize
       @$holder.css imgSize
+    
+    overrideOption: (o) ->
+      @options = $.extend @options, o
 
     _handleAfterOpen: ->
 
@@ -239,7 +243,8 @@ do ($ = jQuery) ->
 
       @_openerClickHandler = (e) =>
         e.preventDefault()
-        @open()
+        if @options.use_click_open
+          @open()
       @_resizeHandler = (e) =>
         @resizeDialog()
         @resizeEls()
